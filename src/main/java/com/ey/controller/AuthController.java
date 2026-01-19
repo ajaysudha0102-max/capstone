@@ -44,5 +44,16 @@ public class AuthController {
 
     }
 
+    @PostMapping("/logout")
+
+    public ResponseEntity<?> logout() {
+
+
+        return ResponseEntity.ok("loggedout seccesfully");
+
+    }
+    
+    
+
 }
  

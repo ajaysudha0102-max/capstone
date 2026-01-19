@@ -16,6 +16,8 @@ import com.ey.dto.request.ChangePasswordRequest;
 import com.ey.dto.request.UserRegisterRequest;
 import com.ey.dto.response.UserResponse;
 import com.ey.entity.User;
+import com.ey.enums.UserRole;
+import com.ey.exception.ApiException;
 import com.ey.mapper.UserMapper;
 import com.ey.repository.UserRepository;
 
@@ -132,6 +134,21 @@ public class UserServiceImpl implements UserService {
         logger.info("Password reset successful for email: " + request.getEmail());
 
         return new ResponseEntity<>("Password reset successful", HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<?> getUserByRole(UserRole role) {
+		   List<User> users = userRepo.findByRole(role);
+		   if (users.isEmpty()) {
+		       logger.warn("No users found with role: " + role);
+		       throw new ApiException("No users found with role: " + role);
+		   }
+		   List<UserResponse> responses = new ArrayList<>();
+		   for (User user : users) {
+		       responses.add(UserMapper.userToResponse(user));
+		   }
+		   logger.info("Fetched {} users with role {}", users.size(), role);
+		   return ResponseEntity.ok(responses);
 	}
 
 }

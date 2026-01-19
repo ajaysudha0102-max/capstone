@@ -2,12 +2,10 @@ package com.ey.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +14,7 @@ import com.ey.dto.response.CleanerBookingDetailsResponse;
 import com.ey.entity.Booking;
 import com.ey.entity.User;
 import com.ey.enums.BookingStatus;
+import com.ey.exception.ApiException;
 import com.ey.mapper.BookingMapper;
 import com.ey.repository.BookingRepository;
 import com.ey.repository.UserRepository;
@@ -23,66 +22,67 @@ import com.ey.repository.UserRepository;
 import jakarta.validation.Valid;
 
 @Service
-public class CleanerServiceImpl implements CleanerService{
-	
-    Logger logger = LoggerFactory.getLogger(CleanerServiceImpl.class);
 
-	@Autowired
-	private BookingRepository bookingRepo;
-	
-	@Autowired
-	private UserRepository userRepo;
+public class CleanerServiceImpl implements CleanerService {
 
-	@Override
-	public ResponseEntity<?> getCleanerBookings(Long cleanerId) {
-		Optional<User> cleaner =userRepo.findById(cleanerId);
-		
-		 if (cleaner.isEmpty()) {
-	            logger.warn("Cleaner not found: " + cleanerId);
-	            return new ResponseEntity<>("Cleaner not found", HttpStatus.NOT_FOUND);
-	        }
+    private static final Logger logger = LoggerFactory.getLogger(CleanerServiceImpl.class);
 
-	        List<Booking> bookings = bookingRepo.findByCleanerId(cleanerId);
+    @Autowired
 
-	        if (bookings.isEmpty()) {
-	            return ResponseEntity.ok("No bookings assigned to this cleaner");
-	        }
+    private BookingRepository bookingRepo;
 
-	        List<CleanerBookingDetailsResponse> responses = new ArrayList<>();
+    @Autowired
 
-	        for (Booking booking : bookings) {
-	            responses.add(BookingMapper.toCleanerBookingResponse(booking));
-	        }
+    private UserRepository userRepo;
 
-	        logger.info("Fetched bookings for cleaner: " + cleanerId);
+    @Override
 
-	        return ResponseEntity.ok(responses);
-	}
+    public ResponseEntity<?> getCleanerBookings(Long cleanerId) {
 
-	@Override
-	public ResponseEntity<?> updateJobStatus(Long bookingId, @Valid BookingStatusUpdateRequest request) {
+        User cleaner = userRepo.findById(cleanerId)
 
-        Optional<Booking> optBooking = bookingRepo.findById(bookingId);
+                .orElseThrow(() -> new ApiException("Cleaner not found with id: " + cleanerId));
 
-        if (optBooking.isEmpty()) {
-            logger.warn("Booking not found: " + bookingId);
-            return new ResponseEntity<>("Booking not found", HttpStatus.NOT_FOUND);
+        List<Booking> bookings = bookingRepo.findByCleanerId(cleanerId);
+
+        if (bookings.isEmpty()) {
+
+            throw new ApiException("No bookings assigned to this cleaner");
+
         }
 
-        Booking booking = optBooking.get();
+        List<CleanerBookingDetailsResponse> responses = new ArrayList<>();
+
+        for (Booking booking : bookings) {
+
+            responses.add(BookingMapper.toCleanerBookingResponse(booking));
+
+        }
+
+        logger.info("Fetched bookings for cleaner: {}", cleanerId);
+
+        return ResponseEntity.ok(responses);
+
+    }
+
+    @Override
+
+    public ResponseEntity<?> updateJobStatus(Long bookingId, @Valid BookingStatusUpdateRequest request) {
+
+        Booking booking = bookingRepo.findById(bookingId)
+
+                .orElseThrow(() -> new ApiException("Booking not found with id: " + bookingId));
 
         BookingStatus newStatus = request.getStatus();
 
-        
-
         booking.setBookingStatus(newStatus);
+
         bookingRepo.save(booking);
 
-        logger.info("Booking status updated for bookingId=" + bookingId + " to " + newStatus);
+        logger.info("Booking status updated for bookingId={} to {}", bookingId, newStatus);
 
         return ResponseEntity.ok("Job status updated successfully");
+
     }
-	}
-	
 
-
+}

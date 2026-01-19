@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 
 import com.ey.dto.request.ChangePasswordRequest;
 import com.ey.dto.request.UserRegisterRequest;
+import com.ey.enums.UserRole;
 
 import jakarta.validation.Valid;
 
@@ -20,5 +21,7 @@ public interface UserService {
 	ResponseEntity<?> deleteUser(Long id);
 
 	ResponseEntity<?> changePassword(@Valid ChangePasswordRequest request);
+
+	ResponseEntity<?> getUserByRole(UserRole role);
 
 }

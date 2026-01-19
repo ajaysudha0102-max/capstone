@@ -3,7 +3,6 @@ package com.ey.service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,140 +15,157 @@ import com.ey.dto.request.AddressRequest;
 import com.ey.dto.response.AddressResponse;
 import com.ey.entity.Address;
 import com.ey.entity.User;
+import com.ey.exception.ApiException;
 import com.ey.mapper.AddressMapper;
 import com.ey.repository.AddressRepository;
 import com.ey.repository.UserRepository;
-import com.ey.service.AddressService;
 
 @Service
+
 public class AddressServiceImpl implements AddressService {
 
-    Logger logger = LoggerFactory.getLogger(AddressServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(AddressServiceImpl.class);
 
     @Autowired
+
     private AddressRepository addressRepo;
 
     @Autowired
+
     private UserRepository userRepo;
 
     @Override
+
     public ResponseEntity<?> addAddress(AddressRequest request) {
 
-        Optional<User> userOpt = userRepo.findById(request.getUserId());
+        User user = userRepo.findById(request.getUserId())
 
-        if (userOpt.isEmpty()) {
-            logger.warn("User not found with id: " + request.getUserId());
-            return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
-        }
+                .orElseThrow(() -> new ApiException("User not found with id: " + request.getUserId()));
 
         Address address = AddressMapper.requestToEntity(request);
-        address.setUser(userOpt.get());
-        
+
+        address.setUser(user);
+
         address.setCreatedAt(LocalDateTime.now());
 
         Address saved = addressRepo.save(address);
 
         AddressResponse response = AddressMapper.entityToResponse(saved);
 
-        logger.info("Address added for user id: " + request.getUserId());
+        logger.info("Address added for user id: {}", request.getUserId());
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+
     }
 
     @Override
+
     public ResponseEntity<?> getAllAddresses() {
 
         List<Address> list = addressRepo.findAll();
 
         if (list.isEmpty()) {
-            return ResponseEntity.ok("No addresses found");
+
+            throw new ApiException("No addresses found");
+
         }
 
         List<AddressResponse> responses = new ArrayList<>();
 
         for (Address address : list) {
+
             responses.add(AddressMapper.entityToResponse(address));
+
         }
 
         return ResponseEntity.ok(responses);
+
     }
 
     @Override
+
     public ResponseEntity<?> getAddressById(Long id) {
 
-        Optional<Address> opt = addressRepo.findById(id);
+        Address address = addressRepo.findById(id)
 
-        if (opt.isEmpty()) {
-            logger.warn("Address not found with id: " + id);
-            return new ResponseEntity<>("Address not found", HttpStatus.NOT_FOUND);
-        }
+                .orElseThrow(() -> new ApiException("Address not found with id: " + id));
 
-        return new ResponseEntity<>(
-                AddressMapper.entityToResponse(opt.get()),
-                HttpStatus.OK);
+        return ResponseEntity.ok(AddressMapper.entityToResponse(address));
+
     }
 
     @Override
+
     public ResponseEntity<?> getAddressesByUser(Long userId) {
 
         List<Address> list = addressRepo.findByUserId(userId);
 
         if (list.isEmpty()) {
-            return ResponseEntity.ok("No addresses for this user");
+
+            throw new ApiException("No addresses found for user id: " + userId);
+
         }
 
         List<AddressResponse> responses = new ArrayList<>();
 
         for (Address address : list) {
+
             responses.add(AddressMapper.entityToResponse(address));
+
         }
 
         return ResponseEntity.ok(responses);
+
     }
 
     @Override
+
     public ResponseEntity<?> updateAddress(AddressRequest request) {
 
         if (request.getId() == null) {
-            return new ResponseEntity<>("Address id is required for update", HttpStatus.BAD_REQUEST);
+
+            throw new ApiException("Address id is required for update");
+
         }
 
-        Optional<Address> opt = addressRepo.findById(request.getId());
+        Address address = addressRepo.findById(request.getId())
 
-        if (opt.isEmpty()) {
-            return new ResponseEntity<>("Address not found", HttpStatus.NOT_FOUND);
-        }
-
-        Address address = opt.get();
+                .orElseThrow(() -> new ApiException("Address not found with id: " + request.getId()));
 
         address.setStreet(request.getStreet());
+
         address.setCity(request.getCity());
+
         address.setState(request.getState());
+
         address.setPincode(request.getPincode());
+
         address.setCreatedAt(LocalDateTime.now());
 
         Address saved = addressRepo.save(address);
 
         AddressResponse response = AddressMapper.entityToResponse(saved);
 
-        logger.info("Address updated id: " + request.getId());
+        logger.info("Address updated id: {}", request.getId());
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return ResponseEntity.ok(response);
+
     }
 
     @Override
+
     public ResponseEntity<?> deleteAddress(Long id) {
 
-        Optional<Address> opt = addressRepo.findById(id);
+        Address address = addressRepo.findById(id)
 
-        if (opt.isEmpty()) {
-            return new ResponseEntity<>("Address not found", HttpStatus.NOT_FOUND);
-        }
+                .orElseThrow(() -> new ApiException("Address not found with id: " + id));
 
-        addressRepo.deleteById(id);
+        addressRepo.delete(address);
 
-        logger.info("Address deleted id: " + id);
+        logger.info("Address deleted id: {}", id);
 
-        return new ResponseEntity<>("Address deleted successfully", HttpStatus.OK);
+        return ResponseEntity.ok("Address deleted successfully");
+
     }
+
 }
