@@ -20,69 +20,69 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 
 @Entity
-@Table(name="bookings")
+@Table(name = "bookings")
 public class Booking {
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long bookingId;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long bookingId;
 
-    @NotNull(message = "Service date is required")
-    private LocalDate serviceDate;
+	@NotNull(message = "Service date is required")
+	private LocalDate serviceDate;
 
-    @NotBlank(message = "Service address is required")
-    private String serviceAddress;
+	@NotNull(message = "Booking status is required")
+	@Enumerated(EnumType.STRING)
+	private BookingStatus bookingStatus; // CONFIRMED, IN_PROGRESS, COMPLETED, CANCELLED
 
-    @NotBlank(message = "Booking status is required")
-    @Enumerated(EnumType.STRING)
-    private BookingStatus bookingStatus; // CONFIRMED, IN_PROGRESS, COMPLETED, CANCELLED
+	@PositiveOrZero(message = "Total price must be zero or positive")
+	private double totalPrice;
 
-    @PositiveOrZero(message = "Total price must be zero or positive")
-    private double totalPrice;
-    
-    private LocalDateTime createdAt;
-    
+	private LocalDateTime createdAt;
+	@ManyToOne
+	@JoinColumn(name = "address_id", nullable = false)
+	private Address serviceAddress;
 
-    @ManyToOne
-    @JoinColumn(name = "customer_id", nullable = false)
-    private User customer;
+	@ManyToOne
+	@JoinColumn(name = "customer_id", nullable = false)
+	private User customer;
 
-    @ManyToOne
-    @JoinColumn(name = "cleaner_id")
-    private User cleaner;
+	@ManyToOne
+	@JoinColumn(name = "cleaner_id")
+	private User cleaner;
 
-    @ManyToOne
-    @JoinColumn(name = "service_id", nullable = false)
-    private CleaningService service;
+	@ManyToOne
+	@JoinColumn(name = "service_id", nullable = false)
+	private CleaningService service;
 
-    @OneToOne(mappedBy = "booking")
-    private Payment payment;
+	@OneToOne(mappedBy = "booking")
+	private Payment payment;
 
-    @OneToOne(mappedBy = "booking")
-    private Rating rating;
+	@OneToOne(mappedBy = "booking")
+	private Rating rating;
 
 	public Booking() {
 		super();
 	}
 
+	
 	public Booking(Long bookingId, @NotNull(message = "Service date is required") LocalDate serviceDate,
-			@NotBlank(message = "Service address is required") String serviceAddress,
-			@NotBlank(message = "Booking status is required")  BookingStatus bookingStatus,
+			@NotNull(message = "Booking status is required") BookingStatus bookingStatus,
 			@PositiveOrZero(message = "Total price must be zero or positive") double totalPrice,
-			LocalDateTime createdAt, User customer, User cleaner, CleaningService service, Payment payment,
-			Rating rating) {
+			LocalDateTime createdAt, Address serviceAddress, User customer, User cleaner, CleaningService service,
+			Payment payment, Rating rating) {
 		super();
 		this.bookingId = bookingId;
 		this.serviceDate = serviceDate;
-		this.serviceAddress = serviceAddress;
 		this.bookingStatus = bookingStatus;
 		this.totalPrice = totalPrice;
 		this.createdAt = createdAt;
+		this.serviceAddress = serviceAddress;
 		this.customer = customer;
 		this.cleaner = cleaner;
 		this.service = service;
 		this.payment = payment;
 		this.rating = rating;
 	}
+
 
 	public Long getBookingId() {
 		return bookingId;
@@ -100,19 +100,19 @@ public class Booking {
 		this.serviceDate = serviceDate;
 	}
 
-	public String getServiceAddress() {
+	public  Address getServiceAddress() {
 		return serviceAddress;
 	}
 
-	public void setServiceAddress(String serviceAddress) {
-		this.serviceAddress = serviceAddress;
+	public void setServiceAddress(Address address) {
+		this.serviceAddress = address;
 	}
 
-	public  BookingStatus getBookingStatus() {
+	public BookingStatus getBookingStatus() {
 		return bookingStatus;
 	}
 
-	public void setBookingStatus( BookingStatus bookingStatus) {
+	public void setBookingStatus(BookingStatus bookingStatus) {
 		this.bookingStatus = bookingStatus;
 	}
 
@@ -171,7 +171,5 @@ public class Booking {
 	public void setRating(Rating rating) {
 		this.rating = rating;
 	}
-    
-    
-    
+
 }

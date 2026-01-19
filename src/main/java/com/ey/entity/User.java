@@ -16,6 +16,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
@@ -47,7 +48,7 @@ public class User {
 	@Size(min = 6)
 	private String password;
 
-	@NotBlank(message = "Role is required")
+	@NotNull(message = "Role is required")
 	@Enumerated(EnumType.STRING)
 	
 	private UserRole role; // CUSTOMER, CLEANER, ADMIN
@@ -79,7 +80,7 @@ public class User {
 			@NotBlank(message = "Phone number is required") @Pattern(regexp = "^[6-9][0-9]{9}$", message = "Invalid phone number") String phoneNumber,
 			@NotBlank(message = "Email is required") @Email(message = "Invalid email format") String email,
 			@NotBlank(message = "Password is required") @Size(min = 6) String password,
-			@NotBlank(message = "Role is required") @NotBlank(message = "Role is required") UserRole role, LocalDateTime createdAt,
+			@NotNull(message = "Role is required") @NotBlank(message = "Role is required") UserRole role, LocalDateTime createdAt,
 			List<Booking> customerBookings, List<Booking> cleanerBookings, List<Address> addresses,
 			List<Rating> givenRatings, List<Rating> receivedRatings) {
 		super();

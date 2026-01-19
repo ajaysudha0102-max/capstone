@@ -1,25 +1,34 @@
 package com.ey.dto.request;
 
-
 import jakarta.validation.constraints.*;
 
 public class AddressRequest {
+	private Long id;
+	private Long userId;
 
-    @NotBlank(message = "House number is required")
-    private String houseNumber;
+	public Long getUserId() {
+		return userId;
+	}
 
-    @NotBlank(message = "Street is required")
-    private String street;
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
 
-    @NotBlank(message = "City is required")
-    private String city;
+	@NotBlank(message = "House number is required")
+	private String houseNumber;
 
-    @NotBlank(message = "State is required")
-    private String state;
+	@NotBlank(message = "Street is required")
+	private String street;
 
-    @NotBlank(message = "Pincode is required")
-    @Pattern(regexp = "^[0-9]{6}$", message = "Pincode must be 6 digits")
-    private String pincode;
+	@NotBlank(message = "City is required")
+	private String city;
+
+	@NotBlank(message = "State is required")
+	private String state;
+
+	@NotBlank(message = "Pincode is required")
+	@Pattern(regexp = "^[0-9]{6}$", message = "Pincode must be 6 digits")
+	private String pincode;
 
 	public String getHouseNumber() {
 		return houseNumber;
@@ -60,7 +69,15 @@ public class AddressRequest {
 	public void setPincode(String pincode) {
 		this.pincode = pincode;
 	}
-    
-    
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	
 
 }

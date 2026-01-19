@@ -5,7 +5,14 @@ import java.time.LocalDateTime;
 public class AddressResponse {
 	
 	 private Long id;
-	    private String houseNumber;
+	   private Long userId;
+	    public Long getUserId() {
+		return userId;
+	}
+	   public void setUserId(Long userId) {
+		   this.userId = userId;
+	   }
+		private String houseNumber;
 	    private String street;
 	    private String city;
 	    private String state;

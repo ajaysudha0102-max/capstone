@@ -15,6 +15,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 @Entity
 @Table(name = "payments")
@@ -26,12 +27,11 @@ public class Payment {
 	    @Positive(message = "Payment amount must be greater than 0")
 	    private double amount;
 
-	    @NotBlank(message = "Payment method is required (COD / CARD / UPI)")
+	    @NotNull(message = "Payment method is required (COD / CARD / UPI)")
 	    @Enumerated(EnumType.STRING)
-
 	    private PaymentMethod paymentMethod;
 
-	    @NotBlank(message = "Payment status is required (PENDING / SUCCESS / FAILED)")
+	    @NotNull(message = "Payment status is required (PENDING / SUCCESS / FAILED)")
 	    @Enumerated(EnumType.STRING)
 
 	    private PaymentStatus paymentStatus;

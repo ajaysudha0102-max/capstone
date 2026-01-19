@@ -5,6 +5,7 @@ public class RatingResponse {
     private int rating;
     private String comment;
     private Long customerId;
+    private Long cleanerId;
     private Long bookingId;
 	public Long getId() {
 		return id;
@@ -36,6 +37,13 @@ public class RatingResponse {
 	public void setBookingId(Long bookingId) {
 		this.bookingId = bookingId;
 	}
+	public Long getCleanerId() {
+		return cleanerId;
+	}
+	public void setCleanerId(Long cleanerId) {
+		this.cleanerId = cleanerId;
+	}
+	
 	
     
     

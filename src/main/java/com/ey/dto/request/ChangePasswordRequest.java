@@ -3,6 +3,9 @@ package com.ey.dto.request;
 import jakarta.validation.constraints.*;
 
 public class ChangePasswordRequest {
+	
+    @NotBlank(message = "email is required")
+	private String email;
 
     @NotBlank(message = "Old password is required")
     private String oldPassword;
@@ -13,6 +16,14 @@ public class ChangePasswordRequest {
 
 	public String getOldPassword() {
 		return oldPassword;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public void setOldPassword(String oldPassword) {
