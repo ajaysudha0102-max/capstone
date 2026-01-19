@@ -50,8 +50,7 @@ public class User {
 
 	@NotNull(message = "Role is required")
 	@Enumerated(EnumType.STRING)
-	
-	private UserRole role; // CUSTOMER, CLEANER, ADMIN
+	private UserRole role;
 	
     private LocalDateTime createdAt;
     
