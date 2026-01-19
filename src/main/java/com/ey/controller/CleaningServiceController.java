@@ -23,7 +23,7 @@ public class CleaningServiceController {
 	@Autowired
 	private CleaningServiceService cleaningService;
 	
-	@PostMapping("/add")
+	@PostMapping("/admin/add")
    public ResponseEntity<?> addService(@Valid @RequestBody CleaningServiceRequest request){
 		return cleaningService.addService(request);
 	}

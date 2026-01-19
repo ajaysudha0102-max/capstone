@@ -45,11 +45,13 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
 
                 .requestMatchers("/api/auth/**").permitAll()
-
-                .requestMatchers("/api/admin/**").hasRole("ADMIN")
-
                 
+                .requestMatchers("/api/bookings/**").hasRole("CUSTOMER")
+
+                .requestMatchers("/api/admin/**,/api/payments/**").hasRole("ADMIN")
                 
+                .requestMatchers("/api/address/**,/api/rating/**").hasRole("CUSTOMER")
+
 
                 .requestMatchers("/api/cleaner/**").hasRole("CLEANER")
 

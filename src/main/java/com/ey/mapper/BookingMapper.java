@@ -33,7 +33,7 @@ public class BookingMapper {
 		response.setAddressId(booking.getServiceAddress().getId());
 		response.setServiceDate(booking.getServiceDate());
 		response.setBookingStatus(booking.getBookingStatus());
-		response.setPaymentStatus(booking.getPayment().getPaymentStatus());
+		// response.setPaymentStatus(booking.getPayment().getPaymentStatus());
 		response.setTotalPrice(booking.getTotalPrice());
 		return response;
 	}
