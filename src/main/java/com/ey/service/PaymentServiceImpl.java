@@ -1,8 +1,8 @@
 package com.ey.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,75 +16,89 @@ import com.ey.dto.response.PaymentResponse;
 import com.ey.entity.Booking;
 import com.ey.entity.Payment;
 import com.ey.enums.PaymentStatus;
+import com.ey.exception.ApiException;
 import com.ey.mapper.PaymentMapper;
 import com.ey.repository.BookingRepository;
 import com.ey.repository.PaymentRepository;
 
-import jakarta.validation.Valid;
-
 @Service
-public class PaymentServiceImpl implements PaymentService{
-	
-    Logger logger = LoggerFactory.getLogger(PaymentServiceImpl.class);
 
-	
+public class PaymentServiceImpl implements PaymentService {
+
+	private static final Logger logger = LoggerFactory.getLogger(PaymentServiceImpl.class);
+
 	@Autowired
+
 	private PaymentRepository paymentRepo;
-	
+
 	@Autowired
+
 	private BookingRepository bookingRepo;
-	
 
 	@Override
-	public ResponseEntity<?> createPayment( PaymentRequest request) {
-		
-		  Optional<Booking> bookingOpt = bookingRepo.findById(request.getBookingId());
-	        if (bookingOpt.isEmpty())
-            return new ResponseEntity<>("Booking not found", HttpStatus.NOT_FOUND);
-		
-		Booking booking =bookingOpt.get();
-		
-		 Payment payment = new Payment();
-		 
-	        payment.setBooking(booking);
-	        payment.setPaymentMethod(request.getPaymentMethod());
-	        payment.setAmount(booking.getTotalPrice());
-	        payment.setPaymentStatus(PaymentStatus.PENDING);
 
-	        Payment saved = paymentRepo.save(payment);
+	public ResponseEntity<?> createPayment(PaymentRequest request) {
 
-	        PaymentResponse response = PaymentMapper.entityToResponse(saved);
+		Booking booking = bookingRepo.findById(request.getBookingId())
 
-	        logger.info("Payment successful for booking id: " + request.getBookingId());
+				.orElseThrow(() -> new ApiException("Booking not found with id: " + request.getBookingId()));
 
-	        return new ResponseEntity<>(response, HttpStatus.CREATED);
-		
-		
+		Payment payment = new Payment();
+
+		payment.setBooking(booking);
+
+		payment.setPaymentMethod(request.getPaymentMethod());
+
+		payment.setAmount(booking.getTotalPrice());
+
+		payment.setPaymentStatus(PaymentStatus.PENDING);
+
+		payment.setPaymentDate(LocalDateTime.now());
+
+		Payment saved = paymentRepo.save(payment);
+
+		PaymentResponse response = PaymentMapper.entityToResponse(saved);
+
+		logger.info("Payment successful for booking id: {}", request.getBookingId());
+
+		return new ResponseEntity<>(response, HttpStatus.CREATED);
+
 	}
 
 	@Override
+
 	public ResponseEntity<?> getAllPayments() {
-		List<Payment> list= paymentRepo.findAll();
-		
-//		if(list.isEmpty())
-//			return ResponseEntity.ok("no paymnets found");
-		
+
+		List<Payment> list = paymentRepo.findAll();
+
+		if (list.isEmpty()) {
+
+			throw new ApiException("No payments found");
+
+		}
+
 		List<PaymentResponse> response = new ArrayList<>();
-		for(Payment p:list)
+
+		for (Payment p : list) {
+
 			response.add(PaymentMapper.entityToResponse(p));
+
+		}
+
 		return ResponseEntity.ok(response);
-		
+
 	}
 
-
-
 	@Override
+
 	public ResponseEntity<?> getByBookingId(Long bookingId) {
-		Optional<Payment> paymnetOpt= paymentRepo.findByBooking_BookingId(bookingId);
-		if(paymnetOpt.isEmpty())
-			return new ResponseEntity<>("paymnet not found for this booking ",HttpStatus.NOT_FOUND);
-		
-		return new ResponseEntity<>(PaymentMapper.entityToResponse(paymnetOpt.get()),HttpStatus.OK);
+
+		Payment payment = paymentRepo.findByBooking_BookingId(bookingId)
+
+				.orElseThrow(() -> new ApiException("Payment not found for booking id: " + bookingId));
+
+		return ResponseEntity.ok(PaymentMapper.entityToResponse(payment));
+
 	}
 
 }

@@ -1,5 +1,6 @@
 package com.ey.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -45,6 +46,7 @@ public class RatingServiceImpl implements RatingService {
 		rating.setCustomer(customer.get());
 		rating.setCleaner(cleaner.get());
 		rating.setBooking(booking.get());
+		rating.setCreatedAt(LocalDateTime.now());
 		
 		
 		Rating saved = ratingRepo.save(rating);

@@ -2,11 +2,11 @@ package com.ey.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,21 +23,28 @@ public class CleaningServiceController {
 	@Autowired
 	private CleaningServiceService cleaningService;
 	
+	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/admin/add")
    public ResponseEntity<?> addService(@Valid @RequestBody CleaningServiceRequest request){
 		return cleaningService.addService(request);
 	}
 	
 	@GetMapping
+	@PreAuthorize("hasAnyRole('ADMIN','CUSTOMER')")
+
 	 public ResponseEntity<?> getAllServices(){
 		return cleaningService.getAllServices();
 		
 	}
 	@GetMapping("/get/{id}")
+	@PreAuthorize("hasAnyRole('ADMIN','CUSTOMER')")
+
 	 public ResponseEntity<?> getById(@PathVariable Long id){
 		return cleaningService.getById(id);
 	}
 	@DeleteMapping("/delete/{id}")
+	@PreAuthorize("hasRole('ADMIN')")
+
 	 public ResponseEntity<?> deleteService(@PathVariable Long id){
 		return cleaningService.deleteService(id);
 	}
