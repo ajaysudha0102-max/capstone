@@ -3,16 +3,19 @@ package com.ey.controller;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import org.springframework.web.bind.annotation.*;
-
+import com.ey.dto.request.ForgotPasswordRequest;
 import com.ey.dto.request.LoginRequest;
-
+import com.ey.dto.request.ResetPasswordRequest;
 import com.ey.dto.request.UserRegisterRequest;
-
 import com.ey.service.AuthService;
+
+import jakarta.validation.Valid;
 
 @RestController
 
@@ -52,6 +55,16 @@ public class AuthController {
         return ResponseEntity.ok("loggedout seccesfully");
 
     }
+//    @PostMapping("/forgot-password")
+//    public ResponseEntity<?> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
+//        authService.forgotPassword(request);
+//        return ResponseEntity.ok("OTP sent to your email");
+//    }
+//    @PostMapping("/reset-password")
+//    public ResponseEntity<?> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
+//        authService.resetPassword(request);
+//        return ResponseEntity.ok("Password reset successful");
+//    }
     
     
 

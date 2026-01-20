@@ -1,5 +1,7 @@
 package com.ey.service;
 
+import java.time.LocalDate;
+
 import org.springframework.http.ResponseEntity;
 
 import com.ey.dto.request.AssignCleanerRequest;
@@ -22,5 +24,7 @@ public interface BookingService {
 	ResponseEntity<?> cancelBooking(Long id);
 
 	ResponseEntity<?> assignCleaner(@Valid AssignCleanerRequest request);
+
+	ResponseEntity<?> getBookingByDate(LocalDate serviceDate);
 
 }

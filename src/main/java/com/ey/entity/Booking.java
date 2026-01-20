@@ -15,7 +15,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 
@@ -27,6 +27,7 @@ public class Booking {
 	private Long bookingId;
 
 	@NotNull(message = "Service date is required")
+	@FutureOrPresent
 	private LocalDate serviceDate;
 
 	@NotNull(message = "Booking status is required")
@@ -171,5 +172,8 @@ public class Booking {
 	public void setRating(Rating rating) {
 		this.rating = rating;
 	}
+
+
+
 
 }

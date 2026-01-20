@@ -1,5 +1,7 @@
 package com.ey.controller;
 
+import java.time.LocalDate;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +28,7 @@ public class CleanerController {
 		return cleanerService.getCleanerBookings(cleanerId);
 	}
 	
+	
 	 @PutMapping("/bookings/{bookingId}/status")
 	    public ResponseEntity<?> updateJobStatus(
 	            @PathVariable Long bookingId,
@@ -33,5 +36,13 @@ public class CleanerController {
 
 	        return cleanerService.updateJobStatus(bookingId, request);
 	    }
+	 @GetMapping("/{cleanerId}/bookings/date/{date}")
+	 public ResponseEntity<?> getCleanerBookingsByDate(
+	        @PathVariable Long cleanerId,
+	        @PathVariable String date) {
+	    LocalDate serviceDate = LocalDate.parse(date);
+	    return cleanerService.getCleanerBookingsByDate(cleanerId, serviceDate);
+	 }
+	 
 
 }

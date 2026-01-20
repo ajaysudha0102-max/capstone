@@ -22,6 +22,7 @@ public interface UserService {
 
 	ResponseEntity<?> changePassword(@Valid ChangePasswordRequest request);
 
-	ResponseEntity<?> getUserByRole(UserRole role);
+	ResponseEntity<?> getUserByRole(String role);
+
 
 }

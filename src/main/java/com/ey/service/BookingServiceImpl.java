@@ -1,5 +1,6 @@
 package com.ey.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -76,6 +77,7 @@ public class BookingServiceImpl implements BookingService {
 		booking.setServiceAddress(address);
 
 		booking.setBookingStatus(BookingStatus.CONFIRMED);
+		
 
 		booking.setTotalPrice(service.getPrice());
 
@@ -225,6 +227,19 @@ public class BookingServiceImpl implements BookingService {
 
 		return ResponseEntity.ok("Cleaner assigned successfully");
 
+	}
+
+	@Override
+	public ResponseEntity<?> getBookingByDate(LocalDate date) {
+	   List<Booking> list = bookingRepo.findByServiceDate(date);
+	   if (list.isEmpty()) {
+	       return ResponseEntity.ok("No bookings found for date: " + date);
+	   }
+	   List<BookingResponse> responses = new ArrayList<>();
+	   for (Booking b : list) {
+	       responses.add(BookingMapper.entityToResponse(b));
+	   }
+	   return ResponseEntity.ok(responses);
 	}
 
 }

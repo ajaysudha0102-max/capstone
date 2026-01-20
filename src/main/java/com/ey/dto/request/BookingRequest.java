@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import com.ey.enums.PaymentMethod;
 
+import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
 
 public class BookingRequest {
@@ -18,6 +19,7 @@ public class BookingRequest {
     private Long addressId;
 
     @NotNull(message = "Service date is required")
+    @FutureOrPresent
     private LocalDate serviceDate;
 
     @NotNull(message = "Payment method is required")

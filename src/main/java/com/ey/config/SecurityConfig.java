@@ -39,13 +39,13 @@ public class SecurityConfig {
 
             .authorizeHttpRequests(auth -> auth
 
-                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/api/auth/**","/api/users/**").permitAll()
                 
                 .requestMatchers("/api/bookings/**").hasAnyRole("CUSTOMER","ADMIN")
 
-                .requestMatchers("/api/admin/**,/api/payments/**").hasRole("ADMIN")
+                .requestMatchers("/api/admin/**","/api/payments/**").hasRole("ADMIN")
                 
-                .requestMatchers("/api/address/**,/api/rating/**").hasRole("CUSTOMER")
+                .requestMatchers("/api/address/**","/api/rating/**").hasRole("CUSTOMER")
                 .requestMatchers("/api/services/**").authenticated()
 
 

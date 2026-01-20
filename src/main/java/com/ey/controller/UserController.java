@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ey.dto.request.ChangePasswordRequest;
 import com.ey.dto.request.UserRegisterRequest;
+import com.ey.enums.UserRole;
 import com.ey.service.UserService;
 
 import jakarta.validation.Valid;
@@ -44,6 +45,11 @@ public class UserController {
 	public ResponseEntity<?> getUserByEmail(@PathVariable String email){
 		return userService.getUserByEmail(email);
 	}
+	@GetMapping("role/{role}")
+	public ResponseEntity<?> getUserByRole(@PathVariable String role){
+		return userService.getUserByRole(role);
+	}
+	
 	
 	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<?> deleteUser(@PathVariable Long id){

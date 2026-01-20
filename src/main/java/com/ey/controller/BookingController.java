@@ -1,5 +1,7 @@
 package com.ey.controller;
 
+import java.time.LocalDate;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -46,6 +48,13 @@ public class BookingController {
 		return bookingService.getBookingByCleaner(cleanerId);
 		
 	}
+	@GetMapping("/date/{date}")
+	public ResponseEntity<?> getBookingByDate(@PathVariable String date){
+		
+	LocalDate serviceDate=LocalDate.parse(date);
+		return bookingService.getBookingByDate(serviceDate);
+	}
+	
 	@DeleteMapping("/cancel/{id}")
 	public ResponseEntity<?> cancelBooking(@PathVariable Long id){
 		return bookingService.cancelBooking(id);

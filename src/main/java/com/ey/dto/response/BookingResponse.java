@@ -14,7 +14,7 @@ public class BookingResponse {
 
     private LocalDate serviceDate;
     private BookingStatus bookingStatus;
-    private PaymentStatus paymentStatus;
+  //  private PaymentStatus paymentStatus;
     private double totalPrice;
 	public Long getBookingId() {
 		return bookingId;
@@ -52,12 +52,12 @@ public class BookingResponse {
 	public void setBookingStatus(BookingStatus bookingStatus) {
 		this.bookingStatus = bookingStatus;
 	}
-	public PaymentStatus getPaymentStatus() {
-		return paymentStatus;
-	}
-	public void setPaymentStatus(PaymentStatus paymentStatus) {
-		this.paymentStatus = paymentStatus;
-	}
+//	public PaymentStatus getPaymentStatus() {
+//		return paymentStatus;
+//	}
+//	public void setPaymentStatus(PaymentStatus paymentStatus) {
+//		this.paymentStatus = paymentStatus;
+//	}
 	public double getTotalPrice() {
 		return totalPrice;
 	}

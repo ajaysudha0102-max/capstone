@@ -1,19 +1,27 @@
 package com.ey.service;
 
 import java.time.LocalDateTime;
+import java.util.Random;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.ey.dto.request.ForgotPasswordRequest;
+import com.ey.dto.request.ResetPasswordRequest;
 import com.ey.dto.request.UserRegisterRequest;
 import com.ey.entity.User;
+import com.ey.exception.ApiException;
 import com.ey.repository.UserRepository;
 import com.ey.security.JwtUtil;
 
 @Service
 
 public class AuthService {
+	   private final Logger logger = LoggerFactory.getLogger(AuthService.class);
+
 
     @Autowired
 
@@ -71,5 +79,6 @@ public class AuthService {
 
     }
 
+   
 }
  

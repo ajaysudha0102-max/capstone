@@ -16,7 +16,6 @@ import com.ey.dto.request.ChangePasswordRequest;
 import com.ey.dto.request.UserRegisterRequest;
 import com.ey.dto.response.UserResponse;
 import com.ey.entity.User;
-import com.ey.enums.UserRole;
 import com.ey.exception.ApiException;
 import com.ey.mapper.UserMapper;
 import com.ey.repository.UserRepository;
@@ -137,7 +136,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public ResponseEntity<?> getUserByRole(UserRole role) {
+	public ResponseEntity<?> getUserByRole(String role) {
 		   List<User> users = userRepo.findByRole(role);
 		   if (users.isEmpty()) {
 		       logger.warn("No users found with role: " + role);
